@@ -5,16 +5,15 @@ output:
     keep_md: true
 ---
 
-```{r,echo=FALSE}
-knitr::opts_chunk$set(echo=TRUE, message=FALSE, cache = TRUE)
-```
+
 
 ## Loading and preprocessing the data
 
 1. Here we extract data from zip file and load it into variable **data**.  
 2. First we convert date column to Date format and infer corresponding weekday.  
 
-```{r LOADDATA}
+
+```r
 library(ggplot2)
 library(dplyr)
 library(xtable)
@@ -26,7 +25,8 @@ data$dayofweek <- weekdays(data$date)
 ```
 
 ## What is mean total number of steps taken per day?
-```{r, results='asis'}
+
+```r
 ## Calculate total number of steps taken each day
 data_plot <- data %>%
   filter(!is.na(steps)) %>%
@@ -36,16 +36,21 @@ data_plot <- data %>%
 # Plot hitogram of steps taken
 g <- ggplot(data_plot, aes(steps))
 g + geom_histogram() + ggtitle("Histogram of steps taken each day")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 # Calculate and print mean and median of steps taken
 data_summary_original <- data_plot %>%
   summarise(mean = mean(steps), median=median(steps))
 ```
-* Mean of steps taken per day: `r data_summary_original$mean`  
-* Median of steps taken per day: `r data_summary_original$median`  
+* Mean of steps taken per day: 1.0766189\times 10^{4}  
+* Median of steps taken per day: 10765  
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 data_plot <- data %>%
   filter(!is.na(steps)) %>%
   group_by(interval) %>%
@@ -55,15 +60,19 @@ g <- ggplot(data_plot, aes(interval, steps))
 g + geom_line() + ggtitle("Time Series plot of steps teken")
 ```
 
-``` {r, results="hide"}
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+
+```r
 active_interval <- data_plot %>% filter(steps == max(steps))
 ```
 
-Interval **`r active_interval$interval`** contains maximum number of steps.  
+Interval **835** contains maximum number of steps.  
 
 ## Imputing missing values
 
-``` {r}
+
+```r
 # Count NA values
 nacount <- sum(is.na(data$steps))
 
@@ -88,23 +97,28 @@ steps_per_day <- data_imputed %>%
 # Histograms of steps taken per day
 g <- ggplot(steps_per_day, aes(steps))
 g + geom_histogram() + ggtitle("Steps taken per day")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+```r
 # Calculate mean and median of steps taken per day
 data_summary_imputed <- steps_per_day %>%
   summarise(mean=mean(steps), median=median(steps))
 ```
 
-* Number of missing values in dataset: `r nacount`
-* Mean of steps taken per day (dropping NA): `r data_summary_original$mean`  
-* Mean of steps taken per day (imputed): `r data_summary_imputed$mean`  
-* Median of steps taken per day (dropping NA): `r data_summary_original$median`  
-* Median of steps taken per day (Imputed): `r data_summary_imputed$median` 
+* Number of missing values in dataset: 2304
+* Mean of steps taken per day (dropping NA): 1.0766189\times 10^{4}  
+* Mean of steps taken per day (imputed): 1.0766189\times 10^{4}  
+* Median of steps taken per day (dropping NA): 10765  
+* Median of steps taken per day (Imputed): 1.0766189\times 10^{4} 
 
 As we can see, mean has remained unchanged while there is little increase in median
 after imputing missing data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 # Create a dataframe with factor variable
 week <- data.frame(unique(data$dayofweek))
 names(week) <- c("dayofweek")
@@ -118,3 +132,5 @@ data_panel_plot <- data_panel_plot %>%
 g <- ggplot(data_panel_plot, aes(interval,steps))
 g + geom_line() + facet_grid(type~.) + ggtitle("Time series analysis of weedays and weekends")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
