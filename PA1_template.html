@@ -428,6 +428,7 @@ g + geom_line() + ggtitle(&quot;Time Series plot of steps teken&quot;)</code></p
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<p>To impute missing values, We take mean of steps taken per interval for rest of the days</p>
 <pre class="r"><code># Count NA values
 nacount &lt;- sum(is.na(data$steps))
 

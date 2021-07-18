@@ -71,6 +71,8 @@ Interval **835** contains maximum number of steps.
 
 ## Imputing missing values
 
+To impute missing values, We take mean of steps taken per interval for rest of the days
+
 
 ```r
 # Count NA values
